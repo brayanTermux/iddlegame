@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Anime Idle Legends</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+  <div class="container mx-auto px-4 py-8">
+    <header class="mb-8 text-center">
+      <h1 class="text-4xl font-bold text-pink-500 mb-2">Anime Idle Legends</h1>
+      <p class="text-gray-300">Treine seus personagens e torne-se o mestre do anime!</p>
+    </header>
+
+    <div class="flex flex-col items-center mb-16">
+      <!-- Início -->
+      <div id="inicio-content" class="tab-content active">
+        <div class="lg:col-span-2 bg-gray-800 rounded-xl p-6 shadow-lg">
+          <div class="flex justify-between items-center mb-6">
+            <div class="text-2xl font-bold">
+              <span class="text-yellow-300" id="soulPoints">0</span> Soul Points
+            </div>
+            <div class="text-lg flex items-center gap-6">
+              <span><span id="sps">0</span> SP/s</span>
+              <span>Click Power: <span id="clickPwrLabel">1</span></span>
+            </div>
+          </div>
+
+          <!-- Personagem Central -->
+          <div class="relative flex justify-center mb-8">
+            <div class="relative">
+              <img
+                src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/9a5a4bcc-361a-44f0-bb82-5cbb53f07978.png"
+                alt="Anime landscape"
+                id="mainCharacter"
+                class="rounded-lg border-4 border-pink-500 cursor-pointer float-animation"
+              />
+              <div class="absolute bottom-0 left-0 right-0 bg-gray-700 h-4 rounded-b">
+                <div class="progress-bar bg-pink-500 h-full rounded-b" id="clickPowerBar" style="width:0%"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Upgrades básicos -->
+          <div class="bg-gray-700 rounded-lg p-4 mb-6">
+            <h2 class="text-xl font-bold mb-4 text-center">Treinamento Básico</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <button class="upgrade-btn bg-pink-600 hover:bg-pink-700 text-white py-3 px-4 rounded-lg flex justify-between items-center" onclick="buyUpgrade('clickPower')">
+                <span>Poder de Click</span>
+                <span class="text-yellow-300">Custo: <span id="clickPowerCost">10</span> SP</span>
+              </button>
+              <button class="upgrade-btn bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-lg flex justify-between items-center" onclick="buyUpgrade('autoClicker')">
+                <span>Auto Treino</span>
+                <span class="text-yellow-300">Custo: <span id="autoClickerCost">50</span> SP</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Conquistas -->
+          <div class="bg-gray-700 rounded-lg p-4">
+            <h2 class="text-xl font-bold mb-4 text-center">Conquistas Anime</h2>
+            <div class="space-y-3" id="achievements"></div>
+          </div>
+        </div>
+
+        <!-- Personagens -->
+        <div class="bg-gray-800 rounded-xl p-6 shadow-lg w-full">
+          <h2 class="text-2xl font-bold mb-6 text-center text-pink-500">Seu Time</h2>
+          <div class="space-y-6" id="characters"></div>
+        </div>
+      </div>
+
+      <!-- Loja -->
+      <div id="loja-content" class="tab-content hidden">
+        <div class="lg:col-span-2 bg-gray-800 rounded-xl p-6 shadow-lg">
+          <h2 class="text-2xl font-bold mb-6 text-center text-pink-500">Loja</h2>
+          <p class="text-center">Sistema de compras será implementado em breve!</p>
+        </div>
+      </div>
+
+      <!-- Torneio -->
+      <div id="torneio-content" class="tab-content hidden">
+        <div class="bg-gray-800 rounded-xl p-6 shadow-lg w-full">
+          <h2 class="text-2xl font-bold mb-6 text-center text-pink-500">Torneio</h2>
+
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Painel da Luta -->
+            <div class="lg:col-span-2 bg-gray-700 rounded-xl p-4">
+              <div class="flex justify-between items-center mb-3">
+                <div class="font-semibold">Estágio: <span id="stageLabel">1</span></div>
+                <div>Recompensa: <span id="stageRewardLabel">50</span> SP</div>
+              </div>
+
+              <div class="mb-3">
+                <div class="flex justify-between text-sm text-gray-300 mb-1">
+                  <span>HP do Inimigo</span>
+                  <span><span id="enemyHpNow">0</span>/<span id="enemyHpMax">0</span></span>
+                </div>
+                <div class="w-full bg-gray-600 h-4 rounded overflow-hidden">
+                  <div id="enemyHpBar" class="h-4 bg-pink-500" style="width:0%"></div>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <div class="flex justify-between text-sm text-gray-300 mb-1">
+                  <span>Tempo</span>
+                  <span id="fightTimeLabel">00:30</span>
+                </div>
+                <div class="w-full bg-gray-600 h-2 rounded overflow-hidden">
+                  <div id="timeBar" class="h-2 bg-blue-500" style="width:100%"></div>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-3">
+                <button id="btnStartFight" class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded">Iniciar Luta</button>
+                <button id="btnNextStage" class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded opacity-50 cursor-not-allowed" disabled>Próximo Estágio</button>
+                <div class="text-sm text-gray-300">DPS Jogador: <span id="playerDpsLabel">0</span></div>
+              </div>
+            </div>
+
+            <!-- Stats do Jogador -->
+            <div class="bg-gray-700 rounded-xl p-4">
+              <h3 class="font-bold mb-2">Atributos do Jogador</h3>
+              <ul class="space-y-1 text-sm">
+                <li>Ataque: <span id="statAttack">1.00</span></li>
+                <li>Defesa: <span id="statDefense">0.00</span></li>
+                <li>Velocidade: <span id="statSpeed">1.00</span></li>
+                <li>Crítico: <span id="statCrit">5% / x1.50</span></li>
+              </ul>
+              <hr class="my-3 border-gray-600">
+              <p class="text-xs text-gray-300">A luta dura 30s. Vença reduzindo o HP inimigo a zero antes do tempo acabar. Recompensas aumentam com o estágio.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Melhorias -->
+      <div id="melhorias-content" class="tab-content hidden">
+        <div class="bg-gray-800 rounded-xl p-6 shadow-lg w-full">
+          <h2 class="text-2xl font-bold mb-6 text-center text-pink-500">Melhorias de Equipamentos</h2>
+
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Itens -->
+            <div class="lg:col-span-2">
+              <div id="equipments" class="grid sm:grid-cols-2 xl:grid-cols-3 gap-4"></div>
+            </div>
+
+            <!-- Resumo -->
+            <div class="bg-gray-700 rounded-xl p-4">
+              <h3 class="font-bold mb-2">Resumo de Bônus</h3>
+              <ul class="space-y-1 text-sm">
+                <li>SP/s extra dos itens: <span id="equipSpsBonus">0.0</span></li>
+                <li>Multiplicador de Click por Ataque/Velocidade: <span id="equipClickMult">x1.00</span></li>
+              </ul>
+              <hr class="my-3 border-gray-600">
+              <h3 class="font-bold mb-2">Atributos Derivados</h3>
+              <ul class="space-y-1 text-sm">
+                <li>Ataque total: <span id="equipAttackTotal">1.00</span></li>
+                <li>Defesa total: <span id="equipDefenseTotal">0.00</span></li>
+                <li>Velocidade total: <span id="equipSpeedTotal">1.00</span></li>
+                <li>Crítico: <span id="equipCritTotal">5% / x1.50</span></li>
+              </ul>
+              <p class="text-xs text-gray-300 mt-3">Os bônus acima impactam seu DPS no Torneio e o ganho de SP (via SP/s e Click Power).</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Config -->
+      <div id="config-content" class="tab-content hidden">
+        <div class="lg:col-span-2 bg-gray-800 rounded-xl p-6 shadow-lg">
+          <h2 class="text-2xl font-bold mb-6 text-center text-pink-500">Configurações</h2>
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <span>Efeitos de Som</span>
+              <input type="checkbox" class="toggle" checked>
+            </div>
+            <div class="flex items-center justify-between">
+              <span>Notificações</span>
+              <input type="checkbox" class="toggle" checked>
+            </div>
+            <button class="mt-4 bg-red-600 hover:bg-red-700 px-4 py-2 rounded" onclick="resetSave()">Resetar Progresso</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="fixed bottom-0 left-0 right-0 bg-gray-800 border-t border-gray-700">
+    <div class="container mx-auto flex justify-center">
+      <button class="tab-btn active py-3 px-6 text-white border-b-2 border-pink-500" data-tab="inicio">Início</button>
+      <button class="tab-btn py-3 px-6 text-gray-400" data-tab="loja">Loja</button>
+      <button class="tab-btn py-3 px-6 text-gray-400" data-tab="torneio">Torneio</button>
+      <button class="tab-btn py-3 px-6 text-gray-400" data-tab="melhorias">Melhorias</button>
+      <button class="tab-btn py-3 px-6 text-gray-400" data-tab="config">Config</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

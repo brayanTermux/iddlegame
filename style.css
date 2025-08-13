@@ -1,0 +1,20 @@
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-20px)} }
+.float-animation { animation: float 3s ease-in-out infinite; }
+.progress-bar { transition: width .3s ease; }
+.character-card:hover { transform: scale(1.05); transition: transform .2s; }
+
+.click-effect {
+  position:absolute; width:40px; height:40px; background-color:rgba(255,255,255,.7);
+  border-radius:50%; pointer-events:none; animation:clickAnime .5s ease-out;
+}
+@keyframes clickAnime { to{ transform:scale(2); opacity:0 } }
+
+/* Cards de equipamento */
+.equip-card { background: #374151; border-radius: .75rem; padding: .75rem; }
+.equip-card h4 { font-weight:700; }
+.equip-card .meta { font-size:.8rem; color:#d1d5db; }
+.equip-card button[disabled] { opacity:.5; cursor:not-allowed; }
+
+/* Barras Torneio */
+#enemyHpBar { transition: width .2s linear; }
+#timeBar { transition: width .2s linear; }
